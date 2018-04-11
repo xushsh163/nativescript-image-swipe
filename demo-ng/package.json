@@ -6,7 +6,7 @@
   "nativescript": {
     "id": "com.tangrainc.imageswipedemong",
     "tns-android": {
-      "version": "3.4.1"
+      "version": "3.1.1"
     },
     "tns-ios": {
       "version": "3.4.1"
@@ -20,15 +20,15 @@
     "@angular/forms": "~5.2.0",
     "@angular/http": "~5.2.0",
     "@angular/platform-browser": "~5.2.0",
+    "@angular/platform-browser-dynamic": "~5.2.0",
     "@angular/router": "~5.2.0",
     "nativescript-angular": "^5.2.0",
-    "nativescript-image-swipe": "file:../bin/dist",
+    "nativescript-image-swipe": "file:..",
     "nativescript-theme-core": "~1.0.2",
     "reflect-metadata": "~0.1.8",
     "rxjs": "^5.5.0",
     "tns-core-modules": "^3.4.1",
-    "zone.js": "^0.8.4",
-    "@angular/platform-browser-dynamic": "~5.2.0"
+    "zone.js": "^0.8.4"
   },
   "devDependencies": {
     "@angular/compiler-cli": "~5.2.0",
