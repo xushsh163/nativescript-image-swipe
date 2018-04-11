@@ -1,0 +1,10 @@
+android { 
+    productFlavors {
+        "nativescript-image-swipe" {
+            dimension "nativescript-image-swipe"
+        }
+    }
+}
+dependencies {
+  compile 'com.romandanylyk:pageindicatorview:0.2.0'
+}

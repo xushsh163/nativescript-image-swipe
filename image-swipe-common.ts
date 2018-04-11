@@ -31,6 +31,9 @@ export class ImageSwipeBase extends ScrollView implements ImageSwipeDefinition {
     public imageUrlProperty: string;
     public isItemsSourceIn: boolean;
     public allowZoom: boolean;
+    public showIndicator: boolean;
+    public indicatorOffset: string;
+    public indicatorAlignment: string;
 
     constructor() {
         super();
@@ -90,3 +93,21 @@ export const allowZoomProperty = new Property<ImageSwipeBase, boolean>({
     defaultValue: true
 });
 allowZoomProperty.register(ImageSwipeBase);
+
+export const showIndicatorProperty = new Property<ImageSwipeBase, boolean>({
+    name: "showIndicator",
+    defaultValue: true
+});
+showIndicatorProperty.register(ImageSwipeBase);
+
+export const indicatorOffsetProperty = new Property<ImageSwipeBase, string>({
+    name: "indicatorOffset",
+    defaultValue: ""
+});
+indicatorOffsetProperty.register(ImageSwipeBase);
+
+export const indicatorAlignmentProperty = new Property<ImageSwipeBase, string>({
+    name: "indicatorAlignment",
+    defaultValue: ""
+});
+indicatorAlignmentProperty.register(ImageSwipeBase);

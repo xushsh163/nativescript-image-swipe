@@ -52,9 +52,10 @@ obj
 !gruntfile.js
 node_modules
 *.tmp.*
-platforms
 demo/lib
+demo/platforms
 demo-ng/lib
+demo-ng/platforms
 hooks
 *.log
 report

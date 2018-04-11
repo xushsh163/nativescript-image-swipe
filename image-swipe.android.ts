@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***************************************************************************** */
 import { GestureTypes } from "ui/gestures";
+import { GridLayout } from "ui/layouts/grid-layout";
 import { ImageSwipeBase, allowZoomProperty, itemsProperty, pageNumberProperty } from "./image-swipe-common";
 
 // These constants specify the mode that we're in
@@ -35,10 +36,13 @@ export * from "./image-swipe-common";
 
 export class ImageSwipe extends ImageSwipeBase {
     public nativeView: StateViewPager;
-    // public pageIndicatorView = new com.rd.PageIndicatorView(this._context);
+    public pageIndicatorView: any;
+    public pagerIndicatorLayoutParams: any;
 
     public createNativeView() {
         const stateViewPager = new StateViewPager(this._context);
+        this.pageIndicatorView = new com.rd.PageIndicatorView(this._context);
+        this.pagerIndicatorLayoutParams = new org.nativescript.widgets.CommonLayoutParams();
 
         stateViewPager.setOffscreenPageLimit(1);
 
@@ -55,6 +59,47 @@ export class ImageSwipe extends ImageSwipeBase {
         }
 
         return stateViewPager;
+    }
+
+    public onLoaded() {
+        
+        if (this.showIndicator !== false) {
+            this.pagerIndicatorLayoutParams.height = android.support.v4.view.ViewPager.LayoutParams.WRAP_CONTENT;
+            this.pagerIndicatorLayoutParams.width = android.support.v4.view.ViewPager.LayoutParams.MATCH_PARENT;
+
+            var ar = this.indicatorOffset.split(',');
+            var x = ar[0] ? Number(ar[0]) : 0;
+            var y = ar[1] ? Number(ar[1]) : 0;
+
+            var defaultVerticalMargin = 50;
+            var verticalOffset = defaultVerticalMargin + ((y < 0) ? Math.abs(y) : -Math.abs(y)); //Reverse +- to be the same as ios
+            var horizontalOffset = x;
+
+            if (this.indicatorAlignment === "TOP") {
+                this.pagerIndicatorLayoutParams.setMargins(horizontalOffset, verticalOffset, 0, 0);
+                this.pagerIndicatorLayoutParams.gravity = android.view.Gravity.TOP | android.view.Gravity.CENTER;
+            } else {
+                this.pagerIndicatorLayoutParams.setMargins(horizontalOffset, 0, 0, verticalOffset);
+                this.pagerIndicatorLayoutParams.gravity = android.view.Gravity.BOTTOM | android.view.Gravity.CENTER;
+            }
+
+            if (this.pageIndicatorView.getParent()) {
+                this.parent.android.removeView(this.pageIndicatorView);
+            }
+    
+            if(this.parent instanceof GridLayout){
+                this.parent.android.addView(this.pageIndicatorView, this.pagerIndicatorLayoutParams);
+            }else{
+                this.parent.android.addView(this.pageIndicatorView);
+            }
+    
+            this.pageIndicatorView.setViewPager(this.nativeView);
+            this.pageIndicatorView.setCount(this.items ? this.items.length : 0);
+            if (this.pageNumber !== null && this.pageNumber !== undefined) {
+                this.pageIndicatorView.setSelection(this.pageNumber);
+            }
+        }
+        super.onLoaded();
     }
 
     public initNativeView() {
@@ -80,6 +125,7 @@ export class ImageSwipe extends ImageSwipeBase {
 
     public [pageNumberProperty.setNative](value: number) {
         this.nativeView.setCurrentItem(value);
+        this.pageIndicatorView.setSelection(this.pageNumber);
     }
 
     public [itemsProperty.setNative](value: any) {
@@ -87,6 +133,9 @@ export class ImageSwipe extends ImageSwipeBase {
 
         // Coerce selected index after we have set items to native view.
         pageNumberProperty.coerce(this);
+        this.pageIndicatorView.setCount(value instanceof Array ? value.length : 0)
+        this.pageIndicatorView.setSelection(this.pageNumber ? this.pageNumber : 0);
+    }
     }
 }
 
