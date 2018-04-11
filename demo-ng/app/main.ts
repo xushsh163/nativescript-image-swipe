@@ -4,6 +4,6 @@ import { registerElement } from "nativescript-angular/element-registry";
 
 import { AppModule } from "./app.module";
 
-registerElement("ImageSwipe", () => require("nativescript-image-swipe/image-swipe").ImageSwipe);
+registerElement("ImageSwipe", () => require("nativescript-image-swipe").ImageSwipe);
 
 platformNativeScriptDynamic().bootstrapModule(AppModule);

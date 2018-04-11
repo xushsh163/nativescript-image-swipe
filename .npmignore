@@ -7,12 +7,13 @@
 demo/
 demo-ng/
 screenshots/
+node_modules/
 .sln
 *.sln
 *.png
 CONTRIBUTING.md
 *.ts
-!index.d.ts
+!*.d.ts
 *.map
 tsconfig.json
 *.log

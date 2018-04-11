@@ -35,7 +35,7 @@ export * from "./image-swipe-common";
 
 export class ImageSwipe extends ImageSwipeBase {
     public nativeView: StateViewPager;
-    public pageIndicatorView = new com.rd.PageIndicatorView(this._context);
+    // public pageIndicatorView = new com.rd.PageIndicatorView(this._context);
 
     public createNativeView() {
         const stateViewPager = new StateViewPager(this._context);
