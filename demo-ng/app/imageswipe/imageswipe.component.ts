@@ -8,7 +8,7 @@ import { PageChangeEventData } from "nativescript-image-swipe";
 })
 export class ImageSwipeComponent implements OnInit {
     public items: any[] = [];
-    public pageNumber: number = 3;
+    public pageNumber: number = 1;
 
     ngOnInit(): void {
         this.items.push({ imageUrl: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523467796955&di=c4a36367e18f657621fca613899ad5ca&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F9358d109b3de9c822bb66df56081800a18d843fd.jpg" });

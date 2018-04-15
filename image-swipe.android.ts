@@ -67,13 +67,13 @@ export class ImageSwipe extends ImageSwipeBase {
             this.pagerIndicatorLayoutParams.height = android.support.v4.view.ViewPager.LayoutParams.WRAP_CONTENT;
             this.pagerIndicatorLayoutParams.width = android.support.v4.view.ViewPager.LayoutParams.MATCH_PARENT;
 
-            var ar = this.indicatorOffset.split(',');
-            var x = ar[0] ? Number(ar[0]) : 0;
-            var y = ar[1] ? Number(ar[1]) : 0;
+            const ar = this.indicatorOffset.split(",");
+            const x = ar[0] ? Number(ar[0]) : 0;
+            const y = ar[1] ? Number(ar[1]) : 0;
 
-            var defaultVerticalMargin = 50;
-            var verticalOffset = defaultVerticalMargin + ((y < 0) ? Math.abs(y) : -Math.abs(y)); //Reverse +- to be the same as ios
-            var horizontalOffset = x;
+            const defaultVerticalMargin = 50;
+            const verticalOffset = defaultVerticalMargin + ((y < 0) ? Math.abs(y) : -Math.abs(y)); // Reverse +- to be the same as ios
+            const horizontalOffset = x;
 
             if (this.indicatorAlignment === "TOP") {
                 this.pagerIndicatorLayoutParams.setMargins(horizontalOffset, verticalOffset, 0, 0);
@@ -87,7 +87,7 @@ export class ImageSwipe extends ImageSwipeBase {
                 this.parent.android.removeView(this.pageIndicatorView);
             }
     
-            if(this.parent instanceof GridLayout){
+            if (this.parent instanceof GridLayout){
                 this.parent.android.addView(this.pageIndicatorView, this.pagerIndicatorLayoutParams);
             }else{
                 this.parent.android.addView(this.pageIndicatorView);
@@ -133,10 +133,10 @@ export class ImageSwipe extends ImageSwipeBase {
 
         // Coerce selected index after we have set items to native view.
         pageNumberProperty.coerce(this);
-        this.pageIndicatorView.setCount(value instanceof Array ? value.length : 0)
+        this.pageIndicatorView.setCount(value instanceof Array ? value.length : 0);
         this.pageIndicatorView.setSelection(this.pageNumber ? this.pageNumber : 0);
     }
-    }
+    
 }
 
 @Interfaces([android.support.v4.view.ViewPager.OnPageChangeListener])

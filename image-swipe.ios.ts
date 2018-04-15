@@ -20,29 +20,55 @@ export * from "./image-swipe-common";
 
 export class ImageSwipe extends ImageSwipeBase {
     public isScrollingIn = false;
+    public pageControl: UIPageControl;
+    public scrollView: UIScrollView;
+    private _ios: UIView;
 
     private _views: Array<{ view: UIView; imageView: UIImageView; zoomDelegate: UIScrollViewZoomDelegateImpl }>;
     private _delegate: UIScrollViewPagedDelegate;
 
+    get ios(): UIView {
+        return this._ios;
+    }
+
+    get _nativeView(): any {
+        return this._ios;
+    }
+
     constructor() {
         super();
+        try {
+            this.isScrollingIn = false;
+            this.scrollView = UIScrollView.new();
+            this._ios = UIView.new();
+            this._ios.clipsToBounds = true;
+            this.nativeView = this._ios;
+            this._ios.addSubview(this.scrollView);
+            this._delegate = UIScrollViewPagedDelegate.initWithOwner(new WeakRef(this));
+            this._views = [];
 
-        const scrollView: UIScrollView = this.ios as UIScrollView;
-
-        this._delegate = UIScrollViewPagedDelegate.initWithOwner(new WeakRef(this));
-        this._views = [];
-
-        scrollView.pagingEnabled = true;
-        scrollView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
+            this.scrollView.pagingEnabled = true;
+            this.scrollView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
+        } catch (e) {
+            console.log(e);
+        }
+    
     }
 
     public onLoaded() {
         super.onLoaded();
-        (this.ios as UIScrollView).delegate = this._delegate;
+        this.scrollView.delegate = this._delegate;
+
+        this.pageControl = UIPageControl.new();
+        this.pageControl.pageIndicatorTintColor = UIColor.lightGrayColor;
+        this.pageControl.currentPageIndicatorTintColor = UIColor.whiteColor;
+        this.pageControl.userInteractionEnabled = false;
+        this._ios.addSubview(this.pageControl);
+        this.pageControl.hidden = !this.showIndicator;
     }
 
     public onUnloaded() {
-        (this.ios as UIScrollView).delegate = null;
+        this.scrollView.delegate = null;
         this._purgeAllPages();
         super.onUnloaded();
     }
@@ -51,12 +77,12 @@ export class ImageSwipe extends ImageSwipeBase {
         super.onLayout(left, top, right, bottom);
 
         if (this.items && this.items.length > 0) {
-            const scrollView: UIScrollView = this.ios;
+            // const scrollView: UIScrollView = this.ios;
 
             this._calcScrollViewContentSize();
 
             if (!this.isScrollingIn) {
-                scrollView.setContentOffsetAnimated(CGPointMake(this.pageNumber * utils.layout.toDeviceIndependentPixels(this.getMeasuredWidth()), 0), false);
+                this.scrollView.setContentOffsetAnimated(CGPointMake(this.pageNumber * utils.layout.toDeviceIndependentPixels(this.getMeasuredWidth()), 0), false);
             }
 
             for (let loop = Math.max(0, this.pageNumber - 1); loop <= Math.min(this.pageNumber + 1, this.items.length - 1); loop++) {
@@ -65,6 +91,16 @@ export class ImageSwipe extends ImageSwipeBase {
                     this._positionImageView(this._views[loop].imageView);
                 }
             }
+            this.pageControl.numberOfPages = this.items.length;
+            this.pageControl.currentPage = this.pageNumber;
+            const ar = this.indicatorOffset.split(",");
+            const x = ar[0] ? Number(ar[0]) : 0;
+            const y = ar[1] ? Number(ar[1]) : 0;
+            const frame: CGRect = new CGRect();
+            frame.size = this.pageControl.sizeForNumberOfPages(this.items.length);
+            frame.origin = CGPointMake(CGRectGetWidth(this.ios.bounds) / 2 - frame.size.width / 2 + x,
+                                    CGRectGetHeight(this.ios.bounds) - frame.size.height + y);
+            this.pageControl.frame = frame;
         }
     }
 
@@ -80,6 +116,10 @@ export class ImageSwipe extends ImageSwipeBase {
         this._purgeAllPages();
         this._calcScrollViewContentSize();
 
+        if (value && value.length > 0) {
+            this.pageControl.sizeForNumberOfPages(value.length);
+        }
+        
         // Coerce selected index after we have set items to native view.
         pageNumberProperty.coerce(this);
     }
@@ -89,11 +129,11 @@ export class ImageSwipe extends ImageSwipeBase {
             return;
         }
 
-        const scrollView: UIScrollView = this.ios;
-        const pageWidth = scrollView.frame.size.width;
+        // const scrollView: UIScrollView = this.ios;
+        const pageWidth = this.scrollView.frame.size.width;
 
         if (!this.isScrollingIn) {
-            scrollView.contentOffset = CGPointMake(value * pageWidth, 0);
+            this.scrollView.contentOffset = CGPointMake(value * pageWidth, 0);
         }
 
         for (let loop = 0; loop < value - 1; loop++) {
@@ -112,6 +152,8 @@ export class ImageSwipe extends ImageSwipeBase {
         for (let loop = value + 2; loop < this.items.length; loop++) {
             this._purgePage(loop);
         }
+
+        this.pageControl.currentPage = value;
 
         this.notify({
             eventName: ImageSwipeBase.pageChangedEvent,
@@ -152,8 +194,8 @@ export class ImageSwipe extends ImageSwipeBase {
             return;
         }
 
-        const scrollView: UIScrollView = this.ios;
-        const frame = scrollView.bounds;
+        // const scrollView: UIScrollView = this.ios;
+        const frame = this.scrollView.bounds;
         const view = this._views[page].view;
 
         frame.origin = CGPointMake(frame.size.width * page, 0);
@@ -174,7 +216,7 @@ export class ImageSwipe extends ImageSwipeBase {
             return;
         }
 
-        const scrollView: UIScrollView = this.ios;
+        // const scrollView: UIScrollView = this.ios;
         const imageUrl = this._getDataItem(page)[this.imageUrlProperty];
         let imageView: UIImageView;
         let activityIndicator: UIActivityIndicatorView;
@@ -205,7 +247,7 @@ export class ImageSwipe extends ImageSwipeBase {
         view.addSubview(activityIndicator);
         view.addSubview(zoomScrollView);
 
-        scrollView.addSubview(view);
+        this.scrollView.addSubview(view);
         this._views[page] = {
             view,
             imageView,
@@ -286,11 +328,11 @@ export class ImageSwipe extends ImageSwipeBase {
     }
 
     private _calcScrollViewContentSize() {
-        const scrollView: UIScrollView = this.ios;
+        // const scrollView: UIScrollView = this.ios;
         const width = utils.layout.toDeviceIndependentPixels(this.getMeasuredWidth());
         const height = utils.layout.toDeviceIndependentPixels(this.getMeasuredHeight());
 
-        scrollView.contentSize = CGSizeMake(this.items.length * width, height);
+        this.scrollView.contentSize = CGSizeMake(this.items.length * width, height);
     }
 }
 
