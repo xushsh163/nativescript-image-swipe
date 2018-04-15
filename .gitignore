@@ -47,15 +47,16 @@ obj
 .vs
 .tscache
 *.user
-*.js
 *.map
 !gruntfile.js
 node_modules
 *.tmp.*
 demo/lib
 demo/platforms
+demo/**/*.js
 demo-ng/lib
 demo-ng/platforms
+demo-ng/**/*.js
 hooks
 *.log
 report
