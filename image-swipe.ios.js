@@ -15,6 +15,7 @@ var ImageSwipe = (function (_super) {
             _this.isScrollingIn = false;
             _this.scrollView = UIScrollView.new();
             _this._ios = UIView.new();
+            _this.pageControl = UIPageControl.new();
             _this._ios.clipsToBounds = true;
             _this.nativeView = _this._ios;
             _this._ios.addSubview(_this.scrollView);
@@ -45,7 +46,6 @@ var ImageSwipe = (function (_super) {
     ImageSwipe.prototype.onLoaded = function () {
         _super.prototype.onLoaded.call(this);
         this.scrollView.delegate = this._delegate;
-        this.pageControl = UIPageControl.new();
         this.pageControl.pageIndicatorTintColor = UIColor.lightGrayColor;
         this.pageControl.currentPageIndicatorTintColor = UIColor.whiteColor;
         this.pageControl.userInteractionEnabled = false;
