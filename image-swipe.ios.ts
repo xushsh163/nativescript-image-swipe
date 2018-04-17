@@ -117,10 +117,9 @@ export class ImageSwipe extends ImageSwipeBase {
 
         if (value && value.length > 0) {
             this.pageControl.numberOfPages = value.length;
-            this.pageControl.currentPage = 0;
             this.pageControl.sizeForNumberOfPages(value.length);
-            this.pageNumber = 0;
-            this._loadPage(0);
+            this.pageControl.currentPage = this.pageNumber;
+            this._loadPage(this.pageNumber);
         }
         
         // Coerce selected index after we have set items to native view.
