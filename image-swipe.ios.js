@@ -93,7 +93,11 @@ var ImageSwipe = (function (_super) {
         this._purgeAllPages();
         this._calcScrollViewContentSize();
         if (value && value.length > 0) {
+            this.pageControl.numberOfPages = value.length;
+            this.pageControl.currentPage = 0;
             this.pageControl.sizeForNumberOfPages(value.length);
+            this.pageNumber = 0;
+            this._loadPage(0);
         }
         image_swipe_common_1.pageNumberProperty.coerce(this);
     };
