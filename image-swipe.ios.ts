@@ -41,6 +41,7 @@ export class ImageSwipe extends ImageSwipeBase {
             this.isScrollingIn = false;
             this.scrollView = UIScrollView.new();
             this._ios = UIView.new();
+            this.pageControl = UIPageControl.new();
             this._ios.clipsToBounds = true;
             this.nativeView = this._ios;
             this._ios.addSubview(this.scrollView);
@@ -58,8 +59,6 @@ export class ImageSwipe extends ImageSwipeBase {
     public onLoaded() {
         super.onLoaded();
         this.scrollView.delegate = this._delegate;
-
-        this.pageControl = UIPageControl.new();
         this.pageControl.pageIndicatorTintColor = UIColor.lightGrayColor;
         this.pageControl.currentPageIndicatorTintColor = UIColor.whiteColor;
         this.pageControl.userInteractionEnabled = false;
